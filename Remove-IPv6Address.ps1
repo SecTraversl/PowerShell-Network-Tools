@@ -35,23 +35,24 @@ function Remove-IPv6Address {
   [Alias('IPv6AddressRemove')]
   param (
     [Parameter(ValueFromPipeline, ValueFromPipelineByPropertyName)]
+    [ValidatePattern("^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$")]
     [System.Object[]]
-    $Object
+    $IPList
   )
   
   begin {
-    # The begin block is run just once and allows us to define an array wherein we will place all of the $Objects we receive from the "|" Pipeline
+    # The begin block is run just once and allows us to define an array wherein we will place all of the objects from $IPList that we receive from the "|" Pipeline
     $array = @()
   }
   
   process {
-    # The process block will run for each $Object seen by the "|" Pipeline
+    # The process block will run for each object in $IPList seen by the "|" Pipeline
     # - from the Pipeline we want to add each of the Objects to our $array before we apply our logic in the end{} block
-    $array += $Object
+    $array += $IPList
   }
 
   end {
-    # The end block will apply our logic below for the entire $array of $Objects from our Pipeline
+    # The end block will apply our logic below for the entire $array of objects (originally from the $IPList array) received from the Pipeline
 
     $Result = $array | ? {$_ -notlike "*:*"}
     Write-Output $Result
